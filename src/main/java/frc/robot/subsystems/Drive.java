@@ -8,10 +8,13 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
+import frc.robot.commands.TankDrive;
+import frc.robot.commands.ArcadeDrive;
 
 /**
  * Add your docs here.
@@ -45,7 +48,20 @@ public Drive (){
   m_rightBack.follow(m_rightMaster);
   m_rightMiddle.follow(m_rightMaster);
 
-  }
+
+  m_leftMaster.setInverted(true);
+  m_leftMiddle.setInverted(true);
+  m_leftBack.setInverted(true);
+  m_rightMaster.setInverted(false);
+  m_rightMiddle.setInverted(false);
+  m_rightBack.setInverted(false);
+  
+  m_leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+  m_rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+
+  m_leftMaster.setSensorPhase(true);
+  m_rightMaster.setSensorPhase(false);
+}
 
   //double is decimal, int is a whole number
 public double getRightPosition (){
@@ -64,17 +80,21 @@ public double getAveragePosition (){
 public void setPower (double RightPow, double LeftPow){
 
   m_leftMaster.set(ControlMode.PercentOutput, LeftPow);
-  m_leftMiddle.set(ControlMode.PercentOutput, LeftPow);
-  m_leftBack.set(ControlMode.PercentOutput, LeftPow);
+  //m_leftMiddle.set(ControlMode.PercentOutput, LeftPow);
+  //m_leftBack.set(ControlMode.PercentOutput, LeftPow);
 
   m_rightMaster.set(ControlMode.PercentOutput, RightPow);
-  m_rightMiddle.set(ControlMode.PercentOutput, RightPow);
-  m_rightBack.set(ControlMode.PercentOutput, RightPow);
+  //m_rightMiddle.set(ControlMode.PercentOutput, RightPow);
+  //m_rightBack.set(ControlMode.PercentOutput, RightPow);
 
+  //commented ones aren't needed
 }
 
   @Override
   public void initDefaultCommand() {
+
+    setDefaultCommand(new ArcadeDrive());
+    setDefaultCommand(new TankDrive());
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
   }
